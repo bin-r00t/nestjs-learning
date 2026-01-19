@@ -1,0 +1,23 @@
+### Test connection
+GET http://127.0.0.1:3000/ HTTP/1.1
+
+### Listing Messages Module 
+GET http://127.0.0.1:3000/messages HTTP/1.1
+
+
+### Creating a Message
+POST http://127.0.0.1:3000/messages HTTP/1.1
+Content-Type: application/json
+
+{
+  "text": 123
+}
+
+
+### Get Message by ID
+GET http://127.0.0.1:3000/messages/1233 HTTP/1.1
+
+
+
+### Test Baidu
+GET http://www.baidu.com/ HTTP/1.1
