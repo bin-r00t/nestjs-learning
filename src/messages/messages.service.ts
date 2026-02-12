@@ -20,4 +20,8 @@ export class MessagesService {
   async create(content: string) {
     return await this.messageRepository.create(content);
   }
+
+  // update
+
+  // delete
 }
