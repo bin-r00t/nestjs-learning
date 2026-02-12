@@ -1,4 +1,8 @@
-import { Injectable } from '@nestjs/common';
+import {
+    BadRequestException,
+    Injectable,
+    NotFoundException,
+} from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { User } from './users.entity';
@@ -15,29 +19,49 @@ export class UsersService {
     return this.repo.find();
   }
 
+  // watch out: this method is not async,
+  // but it returns a promise. NestJS will automatically
+  // await the promise and return the result to the client.
   create(email: string, password: string) {
+    // auto await here:
     const user = this.repo.create({ email, password });
     return this.repo.save(user);
   }
 
-  getById(id: number) {
-    return this.repo.findBy({ id });
+  async getById(id: number) {
+    const users = await this.repo.findBy({ id });
+    if (users && users.length) {
+      return users[0];
+    }
+    throw new NotFoundException();
   }
 
-  getByEmail(email: string) {
-    return this.repo.findBy({ email });
+  async getByEmail(email: string) {
+    const users = await this.repo.findBy({ email });
+    if (users && users.length) {
+      return users[0];
+    }
+    throw new NotFoundException();
   }
 
-  update(id: number, body: any) {
-    return this.repo.update(
+  async update(id: number, body: any) {
+    const result = await this.repo.update(
       {
         id,
       },
       body,
     );
+    if (result.affected === 0) {
+      throw new BadRequestException('User not found');
+    }
+    return this.getById(id);
   }
 
-  remove(id: number) {
-    return this.repo.delete({ id });
+  async remove(id: number) {
+    const result = await this.repo.delete({ id });
+    if (result.affected === 0) {
+      throw new BadRequestException('User not found');
+    }
+    return id;
   }
 }
