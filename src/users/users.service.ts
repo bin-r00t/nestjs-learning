@@ -19,4 +19,25 @@ export class UsersService {
     const user = this.repo.create({ email, password });
     return this.repo.save(user);
   }
+
+  getById(id: number) {
+    return this.repo.findBy({ id });
+  }
+
+  getByEmail(email: string) {
+    return this.repo.findBy({ email });
+  }
+
+  update(id: number, body: any) {
+    return this.repo.update(
+      {
+        id,
+      },
+      body,
+    );
+  }
+
+  remove(id: number) {
+    return this.repo.delete({ id });
+  }
 }
